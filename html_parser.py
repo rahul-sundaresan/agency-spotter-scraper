@@ -13,7 +13,7 @@ def extract_data(soup):
     :param soup:
     '''
     global final_list
-    for company in soup.div.contents:
+    for company in soup.div.children:
         if company['class'] != ['ad_campaign_search']:  # A div in the list is not a company. Something related to ads.
             # We'll skip that div
             company_name = company.contents[0].div.string
@@ -34,9 +34,8 @@ headings = ['id', 'name', 'employee strength']
 
 
 df = pd.DataFrame(final_list, columns=headings)
-print(df.head())
 with open('results.csv', mode='w', newline='') as fn:
-    df.to_csv(fn)
+    df.to_csv(fn, quotechar='"')
 
 '''
 #company name
