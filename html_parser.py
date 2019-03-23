@@ -17,10 +17,15 @@ def extract_data(soup):
         if company['class'] != ['ad_campaign_search']:  # A div in the list is not a company. Something related to ads.
             # We'll skip that div
             company_name = company.contents[0].div.string
+            as_code = company.contents[0]['href'][1:]
+            as_site = "https://www.agencyspotter.com/" + as_code
+            # company_site = company.contents[1].div.contents[1].a['href']
             company_employees = company.contents[2].div.div.contents[1].lstrip()
+            company_location = company.contents[3].string
             company_id = company.contents[3]['data-id']
-            company_row = [company_id, company_name, company_employees]  # single row of data
-            final_list.append(company_row)  # at the end of the loop, we'll have all company info from a single HTML page
+
+            company_row = [company_id, company_name, company_employees, company_location, as_site, as_code]  # single row of data
+            final_list.append(company_row)  # at the end of the loop, we'll have all agencies info from a single HTML page
 
 # final_list = pd.DataFrame()
 
@@ -30,7 +35,7 @@ for file in file_names:
         soup = BeautifulSoup(fp, "lxml")
         print("Parsing " + file)
         extract_data(soup)
-headings = ['id', 'name', 'employee strength']
+headings = ['id', 'name', 'employee strength', 'location', 'agency spotter website', 'agency spotter code']
 
 
 df = pd.DataFrame(final_list, columns=headings)
